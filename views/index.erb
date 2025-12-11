@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Here's a Dumb Idea</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💡</text></svg>">
+    <style>
+        :root {
+            /* Light mode colors */
+            --bg-gradient-start: #667eea;
+            --bg-gradient-end: #764ba2;
+            --text-primary: #fff;
+            --text-secondary: #333;
+            --box-bg: rgba(255, 255, 255, 0.95);
+            --box-shadow: rgba(0, 0, 0, 0.2);
+            --button-bg: #fff;
+            --button-text: #667eea;
+            --input-bg: #fff;
+            --input-border: #667eea;
+            --input-text: #333;
+            --placeholder-text: #999;
+            --form-bg: rgba(255, 255, 255, 0.95);
+            --idea-bg: #f9fafb;
+        }
+
+        body.dark-mode {
+            /* Dark mode colors */
+            --bg-gradient-start: #1a1a2e;
+            --bg-gradient-end: #16213e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #e0e0e0;
+            --box-bg: rgba(30, 30, 50, 0.95);
+            --box-shadow: rgba(0, 0, 0, 0.5);
+            --button-bg: #667eea;
+            --button-text: #fff;
+            --input-bg: #2a2a40;
+            --input-border: #667eea;
+            --input-text: #e0e0e0;
+            --placeholder-text: #888;
+            --form-bg: rgba(30, 30, 50, 0.95);
+            --idea-bg: #2a2a40;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-primary);
+            transition: background 0.3s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .idea-box {
+            background: var(--box-bg);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px var(--box-shadow);
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .idea-text {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            transition: color 0.3s ease;
+        }
+
+        @media (max-width: 600px) {
+            .idea-text {
+                font-size: 1.2rem;
+            }
+        }
+
+        .idea-placeholder {
+            color: var(--placeholder-text);
+            font-style: italic;
+        }
+
+        button {
+            background: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            padding: 1.2rem 3rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px var(--box-shadow);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .share-section {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .share-section.visible {
+            opacity: 1;
+        }
+
+        .share-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .share-btn:active {
+            transform: translateY(0);
+        }
+
+        .share-btn.copy {
+            background: white;
+            color: #667eea;
+        }
+
+        .share-btn.copy.copied {
+            background: #10b981;
+            color: white;
+        }
+
+        .share-btn.twitter {
+            background: #1DA1F2;
+            color: white;
+        }
+
+        .share-btn.facebook {
+            background: #4267B2;
+            color: white;
+        }
+
+        .share-btn.linkedin {
+            background: #0077b5;
+            color: white;
+        }
+
+        .share-btn.reddit {
+            background: #FF4500;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .share-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .share-btn {
+                justify-content: center;
+            }
+        }
+
+        .submission-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .submission-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .submission-form {
+            background: var(--form-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px var(--box-shadow);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .submission-form textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--input-border);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            color: var(--input-text);
+            background: var(--input-bg);
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .submission-form textarea::placeholder {
+            color: var(--placeholder-text);
+        }
+
+        .submission-form textarea:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .char-counter {
+            text-align: right;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .char-counter.warning {
+            color: #f59e0b;
+        }
+
+        .char-counter.error {
+            color: #ef4444;
+        }
+
+        .rate-limit-info {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-mode .rate-limit-info {
+            color: #aaa;
+        }
+
+        .rate-limit-info.warning {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
+        .rate-limit-info.error {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .submit-button {
+            margin-top: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .submission-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .submission-message.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .submission-message.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        footer {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .footer-stats {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-stat {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        @media (max-width: 600px) {
+            .footer-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--box-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg) scale(1.1);
+        }
+
+        @media (max-width: 600px) {
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+        }
+
+        .all-seen-message {
+            background: rgba(255, 193, 7, 0.2);
+            border: 2px solid rgba(255, 193, 7, 0.5);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .all-seen-message.visible {
+            display: block;
+        }
+
+        .loading-spinner {
+            display: none;
+            margin: 0 auto;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid var(--text-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-spinner.visible {
+            display: block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .generate-button {
+            position: relative;
+        }
+
+        .generate-button .shortcut-hint {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: normal;
+            opacity: 0.7;
+            margin-top: 0.25rem;
+        }
+
+        /* Feature 1: Favorites/Bookmarking Styles */
+        .share-btn.favorite {
+            background: #fbbf24;
+            color: #78350f;
+        }
+
+        .share-btn.favorite.active {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .favorites-container {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .favorites-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .favorites-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .favorites-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .favorites-modal.visible {
+            display: flex;
+        }
+
+        .favorites-modal-content {
+            background: var(--box-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px var(--box-shadow);
+        }
+
+        .favorites-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .favorites-modal-header h2 {
+            color: var(--text-secondary);
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .close-modal-btn {
+            background: transparent;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .close-modal-btn:hover {
+            transform: scale(1.2);
+            box-shadow: none;
+        }
+
+        .favorite-item {
+            background: var(--idea-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            position: relative;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .favorite-item-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .favorite-item-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .favorite-item-btn.load {
+            background: #667eea;
+            color: white;
+        }
+
+        .favorite-item-btn.remove {
+            background: #ef4444;
+            color: white;
+        }
+
+        .favorite-item-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .empty-favorites {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--placeholder-text);
+        }
+
+        .empty-favorites p {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .favorites-count {
+            font-size: 0.9rem;
+            color: var(--placeholder-text);
+        }
+
+        /* Feature 2: Idea of the Day Styles */
+        .idea-of-day-container {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .idea-of-day-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #78350f;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px 20px 0 0;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 10px rgba(251, 191, 36, 0.3);
+        }
+
+        .idea-of-day-box {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
+            border: 3px solid #fbbf24;
+            border-radius: 0 0 20px 20px;
+            padding: 2rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 20px rgba(251, 191, 36, 0.2);
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .idea-of-day-text {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        body.dark-mode .idea-of-day-box {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%);
+        }
+
+        body.dark-mode .idea-of-day-text {
+            color: var(--text-primary);
+        }
+
+        .idea-of-day-load-btn {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #78350f;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .idea-of-day-load-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+        }
+
+        .idea-of-day-share {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 0.75rem;
+        }
+
+        .idea-of-day-share-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(251, 191, 36, 0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            padding: 0;
+        }
+
+        .idea-of-day-share-btn:hover {
+            background: #fbbf24;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+        }
+
+        body.dark-mode .idea-of-day-share-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        body.dark-mode .idea-of-day-share-btn:hover {
+            background: rgba(251, 191, 36, 0.3);
+        }
+
+        /* Stats Dashboard Styles */
+        .stats-container {
+            margin-top: 1rem;
+        }
+
+        .stats-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stats-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .stats-dashboard {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background: var(--box-bg);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px var(--box-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: var(--idea-bg);
+            padding: 1.5rem 1rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        body.dark-mode .stat-value {
+            color: #a78bfa;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+        }
+
+        /* Feature 3: Enhanced History Navigation Styles */
+        .history-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .history-nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .history-nav-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .history-nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .history-position {
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 100px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .idea-of-day-text {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" aria-label="Toggle dark mode">
+        🌙
+    </button>
+
+    <div class="container">
+        <h1>Here's a Dumb Idea</h1>
+
+        <!-- Idea of the Day Section -->
+        <div class="idea-of-day-container" id="ideaOfDayContainer" style="display: none;">
+            <div class="idea-of-day-badge">✨ Idea of the Day</div>
+            <div class="idea-of-day-box">
+                <p class="idea-of-day-text" id="ideaOfDayText"></p>
+            </div>
+        </div>
+
+        <div class="idea-box">
+            <div class="loading-spinner" id="loadingSpinner"></div>
+            <p class="idea-text idea-placeholder">Click the button for a dumb idea...</p>
+        </div>
+
+        <button class="generate-button" onclick="generateIdea()">
+            Generate Dumb Idea
+            <span class="shortcut-hint">or press SPACE</span>
+        </button>
+
+        <div class="all-seen-message" id="allSeenMessage">
+            You've seen all available ideas!
+        </div>
+
+        <div class="favorites-container">
+            <button class="history-nav-btn" id="prevIdeaBtn" onclick="goToPreviousIdea()" title="Previous idea (Left Arrow)">
+                ◄
+            </button>
+            <button class="history-nav-btn" id="nextIdeaBtn" onclick="goToNextIdea()" title="Next idea (Right Arrow)">
+                ►
+            </button>
+            <button class="share-btn favorite" id="favoriteBtn" onclick="toggleFavorite()" style="display: none;">
+                <span id="favoriteIcon">⭐</span>
+                <span id="favoriteText">Favorite</span>
+            </button>
+            <button class="favorites-button" onclick="openFavoritesModal()">
+                ⭐ View Favorites (<span id="favoritesCount">0</span>)
+            </button>
+        </div>
+
+        <div class="submission-section">
+            <h2 class="submission-title">Got Your Own Dumb Idea?</h2>
+            <div class="submission-form">
+                <textarea
+                    id="userIdea"
+                    placeholder="Share your dumbest idea here..."
+                    maxlength="500"
+                    oninput="updateCharCounter()"></textarea>
+                <div id="charCounter" class="char-counter">0 / 500 characters</div>
+                <div id="rateLimitInfo" class="rate-limit-info"></div>
+                <button class="submit-button" onclick="submitIdea()">Submit Idea</button>
+                <div id="submissionMessage" class="submission-message" style="display: none;"></div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-stats">
+                <span class="footer-stat">💡 <%= total_ideas %> curated ideas</span>
+                <span class="footer-stat">📝 <%= total_submissions %> user submissions</span>
+                <span class="footer-stat">✅ <%= approved_submissions %> approved</span>
+            </div>
+            <p>All ideas are certified 100% dumb</p>
+        </footer>
+    </div>
+
+    <!-- Favorites Modal -->
+    <div class="favorites-modal" id="favoritesModal" onclick="closeModalOnBackdrop(event)">
+        <div class="favorites-modal-content">
+            <div class="favorites-modal-header">
+                <h2>Your Favorite Ideas</h2>
+                <button class="close-modal-btn" onclick="closeFavoritesModal()">×</button>
+            </div>
+            <div id="favoritesList"></div>
+        </div>
+    </div>
+
+    <script>
+        // Theme management
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
+
+            body.classList.toggle('dark-mode');
+
+            // Update button icon
+            if (body.classList.contains('dark-mode')) {
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load saved theme on page load
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
+
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeToggle.textContent = '☀️';
+            } else {
+                themeToggle.textContent = '🌙';
+            }
+        }
+
+        // Load theme immediately
+        loadTheme();
+
+        // Feature 3: Enhanced Idea History Management with Navigation
+        const HISTORY_KEY = 'ideaHistory';
+        const HISTORY_POSITION_KEY = 'ideaHistoryPosition';
+        const MAX_HISTORY_SIZE = 1000;
+
+        function getIdeaHistory() {
+            const history = localStorage.getItem(HISTORY_KEY);
+            return history ? JSON.parse(history) : [];
+        }
+
+        function getCurrentHistoryPosition() {
+            const position = localStorage.getItem(HISTORY_POSITION_KEY);
+            return position !== null ? parseInt(position) : -1;
+        }
+
+        function setCurrentHistoryPosition(position) {
+            localStorage.setItem(HISTORY_POSITION_KEY, position.toString());
+        }
+
+        function addToHistory(idea) {
+            let history = getIdeaHistory();
+            let position = getCurrentHistoryPosition();
+
+            // If we're not at the end of history, remove everything after current position
+            if (position >= 0 && position < history.length - 1) {
+                history = history.slice(0, position + 1);
+            }
+
+            // Avoid consecutive duplicates
+            if (history.length === 0 || history[history.length - 1] !== idea) {
+                history.push(idea);
+
+                // Trim if too large
+                if (history.length > MAX_HISTORY_SIZE) {
+                    history = history.slice(-MAX_HISTORY_SIZE);
+                }
+
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+
+                // Set position to the newly added idea
+                setCurrentHistoryPosition(history.length - 1);
+            }
+
+            updateHistoryDisplay();
+            updateNavigationButtons();
+        }
+
+        function hasSeenIdea(idea) {
+            const history = getIdeaHistory();
+            return history.includes(idea);
+        }
+
+        function resetHistory() {
+            if (confirm('Clear your idea history? You\'ll start seeing ideas you\'ve already seen.')) {
+                localStorage.removeItem(HISTORY_KEY);
+                localStorage.removeItem(HISTORY_POSITION_KEY);
+                updateHistoryDisplay();
+                updateNavigationButtons();
+                document.getElementById('allSeenMessage').classList.remove('visible');
+            }
+        }
+
+        function updateHistoryDisplay() {
+            // Just update navigation buttons
+            updateNavigationButtons();
+        }
+
+        // Navigation Functions
+        function goToPreviousIdea() {
+            const history = getIdeaHistory();
+            let position = getCurrentHistoryPosition();
+
+            if (position > 0) {
+                position--;
+                setCurrentHistoryPosition(position);
+                loadIdeaFromHistory(position);
+            }
+        }
+
+        function goToNextIdea() {
+            const history = getIdeaHistory();
+            let position = getCurrentHistoryPosition();
+
+            if (position < history.length - 1) {
+                position++;
+                setCurrentHistoryPosition(position);
+                loadIdeaFromHistory(position);
+            }
+        }
+
+        function loadIdeaFromHistory(position) {
+            const history = getIdeaHistory();
+            const idea = history[position];
+
+            if (idea) {
+                const ideaText = document.querySelector('.idea-text');
+                const loadingSpinner = document.getElementById('loadingSpinner');
+
+                // Show loading animation
+                ideaText.style.opacity = '0';
+                setTimeout(() => {
+                    ideaText.textContent = idea;
+                    ideaText.className = 'idea-text';
+                    ideaText.style.opacity = '1';
+
+                    showShareButtons();
+                    updateFavoriteButtonState();
+                    updateHistoryDisplay();
+                    updateNavigationButtons();
+                }, 150);
+            }
+        }
+
+        function updateNavigationButtons() {
+            const history = getIdeaHistory();
+            const position = getCurrentHistoryPosition();
+
+            const prevBtn = document.getElementById('prevIdeaBtn');
+            const nextBtn = document.getElementById('nextIdeaBtn');
+
+            if (prevBtn) {
+                prevBtn.disabled = position <= 0;
+            }
+
+            if (nextBtn) {
+                nextBtn.disabled = position >= history.length - 1 || position === -1;
+            }
+        }
+
+        // Template system for generating ideas
+        const templates = [
+            {
+                pattern: "A [ADJECTIVE] [NOUN] that [VERB] when you [ACTION]",
+                adjective: ["bluetooth-enabled", "artisanal", "reverse-engineered", "gluten-free", "WiFi-connected", "subscription-based", "AI-powered", "organic", "vintage", "minimalist"],
+                noun: ["spatula", "lampshade", "doorknob", "stapler", "fork", "paperclip", "ruler", "sponge", "coaster", "shoelace"],
+                verb: ["screams", "vibrates", "glows", "deflates", "multiplies", "levitates", "sings opera", "dispenses confetti", "apologizes", "judges you"],
+                action: ["sneeze", "blink", "yawn", "hiccup", "think about pizza", "check your phone", "breathe", "laugh", "cry", "exist"]
+            },
+            {
+                pattern: "[ACTIVITY] but exclusively for [TARGET]",
+                activity: ["A dating app", "A fitness program", "A cooking class", "A book club", "A meditation retreat", "A gaming tournament", "An escape room", "A speed dating event", "A concert series", "A film festival"],
+                target: ["people who hate dating", "couch potatoes", "people who can't cook", "people who don't read", "anxious people", "people who lose", "claustrophobic people", "people who are always late", "deaf people", "blind people"]
+            },
+            {
+                pattern: "An app that [ACTION1] your [THING] and [ACTION2]",
+                action1: ["rates", "judges", "photographs", "measures", "counts", "tracks", "analyzes", "criticizes", "celebrates", "ignores"],
+                thing: ["bad decisions", "regrets", "excuses", "procrastination", "awkward moments", "missed opportunities", "embarrassing memories", "weird thoughts", "secrets", "lies"],
+                action2: ["shares them with your mom", "posts them on LinkedIn", "sends them to your boss", "broadcasts them to strangers", "archives them forever", "emails them to your ex", "prints them on billboards", "turns them into a podcast", "makes NFTs out of them", "tattoos them on volunteers"]
+            },
+            {
+                pattern: "A [PLACE] where everything is made of [MATERIAL]",
+                place: ["restaurant", "hotel", "gym", "library", "hospital", "school", "office", "spa", "nightclub", "museum"],
+                material: ["jello", "cardboard", "bubble wrap", "cheese", "rubber", "ice", "velcro", "foam", "cotton candy", "pasta"]
+            },
+            {
+                pattern: "[PRODUCT] designed for people who [CHARACTERISTIC]",
+                product: ["Running shoes", "A pillow", "A laptop", "Sunglasses", "A backpack", "A water bottle", "A jacket", "Headphones", "A watch", "A chair"],
+                characteristic: ["never run", "don't sleep", "hate technology", "live in darkness", "never leave home", "hate water", "live in the tropics", "prefer silence", "ignore time", "stand all day"]
+            },
+            {
+                pattern: "A [DURATION] subscription to [SERVICE]",
+                duration: ["lifetime", "minute-by-minute", "hourly", "annual", "one-time", "eternal", "sporadic", "inconsistent", "surprise", "reluctant"],
+                service: ["receiving junk mail", "being ignored", "bad advice", "cold calls", "spam emails", "robocalls", "awkward silences", "disappointing news", "unnecessary updates", "pointless notifications"]
+            },
+            {
+                pattern: "Like [THING1] but for [THING2]",
+                thing1: ["Uber", "Tinder", "Instagram", "YouTube", "Spotify", "Netflix", "LinkedIn", "TikTok", "Amazon", "Airbnb"],
+                thing2: ["rocks", "lint", "dust bunnies", "expired coupons", "broken pencils", "lost socks", "old receipts", "dead batteries", "bread crumbs", "pocket change"]
+            },
+            {
+                pattern: "A machine that converts [INPUT] into [OUTPUT]",
+                input: ["your hopes", "good moods", "productivity", "motivation", "confidence", "free time", "savings", "energy", "optimism", "willpower"],
+                output: ["disappointment", "existential dread", "procrastination", "regret", "self-doubt", "wasted hours", "debt", "fatigue", "cynicism", "bad habits"]
+            },
+            {
+                pattern: "An annual festival celebrating [CELEBRATION]",
+                celebration: ["things you forgot to do", "missed deadlines", "failed New Year's resolutions", "unopened emails", "ignored messages", "broken promises", "abandoned hobbies", "unwatched Netflix shows", "unread books", "expired groceries"]
+            },
+            {
+                pattern: "A [PROFESSIONAL] who only works with [CLIENT]",
+                professional: ["therapist", "lawyer", "accountant", "personal trainer", "nutritionist", "life coach", "stylist", "architect", "consultant", "tutor"],
+                client: ["people who don't have problems", "criminals", "people who don't pay taxes", "people who never exercise", "people who only eat junk food", "people who have it all figured out", "people with no fashion sense and no desire to improve", "people who live in tents", "people who ignore advice", "people who know everything"]
+            },
+            {
+                pattern: "A class teaching you how to [SKILL] worse",
+                skill: ["cook", "drive", "communicate", "dance", "sing", "write", "paint", "exercise", "meditate", "sleep"]
+            },
+            {
+                pattern: "A robot that [ACTION] but only when [CONDITION]",
+                action: ["does your laundry", "makes coffee", "cleans your house", "walks your dog", "waters your plants", "answers emails", "cooks dinner", "pays your bills", "organizes your closet", "takes out trash"],
+                condition: ["you don't need it to", "you're trying to do it yourself", "you're on vacation", "it's already done", "you're asleep", "nobody's watching", "it would be inconvenient", "you forgot about it", "you're in a hurry", "it's too late"]
+            },
+            {
+                pattern: "Social media for sharing [CONTENT]",
+                content: ["your grocery lists", "parking spot locations", "pictures of dirt", "receipts", "error messages", "loading screens", "blank documents", "closed signs", "empty containers", "dead batteries"]
+            },
+            {
+                pattern: "A [VEHICLE] powered entirely by [FUEL]",
+                vehicle: ["car", "plane", "boat", "train", "skateboard", "bicycle", "scooter", "helicopter", "submarine", "rocket"],
+                fuel: ["compliments", "regret", "sarcasm", "awkwardness", "passive aggression", "embarrassment", "procrastination", "anxiety", "nostalgia", "cringe"]
+            },
+            {
+                pattern: "An insurance policy that covers [COVERAGE]",
+                coverage: ["bad haircuts", "awkward silences", "regrettable texts", "embarrassing moments", "cringe memories", "poor life choices", "forgotten names", "bad jokes", "failed small talk", "accidental replies-all"]
+            },
+            {
+                pattern: "A theme park ride that simulates [EXPERIENCE]",
+                experience: ["waiting in line at the DMV", "being stuck in traffic", "attending a boring meeting", "watching paint dry", "reading terms and conditions", "being on hold with customer service", "waiting for a webpage to load", "sitting in a waiting room", "listening to elevator music", "watching a progress bar"]
+            },
+            {
+                pattern: "A smart home device that [FUNCTION] at the worst possible time",
+                function: ["locks all doors", "turns off all lights", "blasts music", "sets off alarms", "opens all windows", "adjusts thermostat to extreme temperature", "starts the vacuum", "opens the garage", "turns on all faucets", "activates the sprinklers"]
+            },
+            {
+                pattern: "A [TYPE] cookbook with only recipes for [FOOD]",
+                type: ["gourmet", "five-star", "Michelin-rated", "professional chef's", "artisanal", "award-winning", "celebrity chef", "masterclass", "exclusive", "premium"],
+                food: ["cereal", "toast", "ice cubes", "boiling water", "microwaved leftovers", "instant ramen", "frozen dinners", "vending machine snacks", "fast food", "things you burnt"]
+            },
+            {
+                pattern: "A streaming platform that only has [CONTENT]",
+                content: ["commercials", "buffering screens", "error messages", "coming soon trailers", "behind-the-scenes of shows you've never heard of", "episodes you've already seen", "the last 5 minutes of every movie", "video essays about shows not on the platform", "content that expired yesterday", "shows that were canceled after one episode"]
+            },
+            {
+                pattern: "A luxury [ITEM] that costs $10,000 but [FLAW]",
+                item: ["pen", "water bottle", "candle", "T-shirt", "keychain", "paperweight", "bookmark", "rubber band", "paper clip", "eraser"],
+                flaw: ["doesn't work", "breaks immediately", "is invisible", "only works once", "makes things worse", "is exactly the same as the $1 version", "disappears after a week", "only works on Tuesdays", "requires a $5,000 monthly subscription", "needs to be replaced daily"]
+            }
+        ];
+
+        function getRandomElement(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function generateTemplateIdea(maxAttempts = 50) {
+            let attempts = 0;
+
+            while (attempts < maxAttempts) {
+                const template = getRandomElement(templates);
+                let idea = template.pattern;
+
+                // Replace all placeholders in the pattern
+                const placeholders = idea.match(/\[([A-Z0-9_]+)\]/g);
+                if (placeholders) {
+                    placeholders.forEach(placeholder => {
+                        const key = placeholder.slice(1, -1).toLowerCase();
+                        if (template[key]) {
+                            const replacement = getRandomElement(template[key]);
+                            idea = idea.replace(placeholder, replacement);
+                        }
+                    });
+                }
+
+                // Check if we've seen this idea before
+                if (!hasSeenIdea(idea)) {
+                    return idea;
+                }
+
+                attempts++;
+            }
+
+            // If we've tried many times and everything has been seen, return null
+            return null;
+        }
+
+        async function getCuratedIdea(maxAttempts = 20) {
+            let attempts = 0;
+
+            while (attempts < maxAttempts) {
+                try {
+                    const response = await fetch('/api/random-idea');
+                    const data = await response.json();
+                    const idea = data.idea;
+
+                    // Check if we've seen this idea before
+                    if (idea && !hasSeenIdea(idea)) {
+                        return idea;
+                    }
+
+                    attempts++;
+                } catch (error) {
+                    console.error('Error fetching curated idea:', error);
+                    return null;
+                }
+            }
+
+            // If we've tried many times and everything has been seen
+            return null;
+        }
+
+        async function generateIdea() {
+            const ideaText = document.querySelector('.idea-text');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const allSeenMessage = document.getElementById('allSeenMessage');
+
+            // Show loading state
+            ideaText.style.opacity = '0';
+
+            // Wait for fade out animation
+            await new Promise(resolve => setTimeout(resolve, 150));
+            ideaText.style.display = 'none';
+            loadingSpinner.classList.add('visible');
+
+            // 60% curated ideas, 40% template-generated
+            const useTemplate = Math.random() > 0.6;
+
+            let idea;
+            if (useTemplate) {
+                idea = generateTemplateIdea();
+            } else {
+                idea = await getCuratedIdea();
+                // Fallback to template if curated ideas are all seen or API fails
+                if (!idea) {
+                    idea = generateTemplateIdea();
+                }
+            }
+
+            // Hide loading state
+            loadingSpinner.classList.remove('visible');
+            ideaText.style.display = 'block';
+
+            // If both methods failed to find an unseen idea
+            if (!idea) {
+                allSeenMessage.classList.add('visible');
+                ideaText.textContent = 'You\'ve seen all our ideas!';
+                ideaText.className = 'idea-text';
+                await new Promise(resolve => setTimeout(resolve, 150));
+                ideaText.style.opacity = '1';
+                return;
+            }
+
+            // Hide the "all seen" message if it was showing
+            allSeenMessage.classList.remove('visible');
+
+            // Add to history
+            addToHistory(idea);
+
+            // Show idea with animation
+            ideaText.textContent = idea;
+            ideaText.className = 'idea-text';
+
+            await new Promise(resolve => setTimeout(resolve, 150));
+            ideaText.style.opacity = '1';
+
+            // Show share buttons
+            showShareButtons();
+            updateFavoriteButtonState();
+        }
+
+        function showShareButtons() {
+            const favoriteBtn = document.getElementById('favoriteBtn');
+            favoriteBtn.style.display = 'inline-flex';
+        }
+
+        function getCurrentIdea() {
+            const ideaText = document.querySelector('.idea-text');
+            if (ideaText.classList.contains('idea-placeholder')) {
+                return null;
+            }
+            return ideaText.textContent;
+        }
+
+        async function copyToClipboard() {
+            const idea = getCurrentIdea();
+            if (!idea) return;
+
+            try {
+                await navigator.clipboard.writeText(idea);
+
+                // Update button to show success
+                const copyBtn = document.querySelector('.share-btn.copy');
+                const copyIcon = document.getElementById('copyIcon');
+                const copyText = document.getElementById('copyText');
+
+                copyBtn.classList.add('copied');
+                copyIcon.textContent = '✓';
+                copyText.textContent = 'Copied!';
+
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    copyBtn.classList.remove('copied');
+                    copyIcon.textContent = '📋';
+                    copyText.textContent = 'Copy';
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy to clipboard');
+            }
+        }
+
+        function shareToTwitter() {
+            const idea = getCurrentIdea();
+            if (!idea) return;
+
+            const text = `Here's a dumb idea: ${idea}`;
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank', 'width=550,height=420');
+        }
+
+        function shareToFacebook() {
+            const idea = getCurrentIdea();
+            if (!idea) return;
+
+            const url = `https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(idea)}`;
+            window.open(url, '_blank', 'width=550,height=420');
+        }
+
+        function shareToLinkedIn() {
+            const idea = getCurrentIdea();
+            if (!idea) return;
+
+            const text = `Here's a dumb idea: ${idea}`;
+            const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`;
+            window.open(url, '_blank', 'width=550,height=420');
+        }
+
+        function shareToReddit() {
+            const idea = getCurrentIdea();
+            if (!idea) return;
+
+            const title = 'Here\'s a dumb idea';
+            const url = `https://reddit.com/submit?title=${encodeURIComponent(title)}&text=${encodeURIComponent(idea)}`;
+            window.open(url, '_blank', 'width=550,height=420');
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Only trigger if we're not in a text input
+            if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+                return;
+            }
+
+            // Spacebar to generate idea
+            if (e.code === 'Space') {
+                e.preventDefault();
+                generateIdea();
+            }
+
+            // Left arrow for previous idea
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                goToPreviousIdea();
+            }
+
+            // Right arrow for next idea
+            if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                goToNextIdea();
+            }
+
+            // Escape to close modals
+            if (e.key === 'Escape') {
+                closeFavoritesModal();
+            }
+        });
+
+        // Generate an idea on page load after a short delay
+        window.addEventListener('load', () => {
+            updateHistoryDisplay();
+            updateFavoritesCount();
+            displayIdeaOfDay();
+            setTimeout(generateIdea, 500);
+            updateRateLimitStatus();
+        });
+
+        // Fetch and display rate limit status
+        async function updateRateLimitStatus() {
+            try {
+                const response = await fetch('/api/rate-limit-status');
+                const data = await response.json();
+
+                const rateLimitInfo = document.getElementById('rateLimitInfo');
+                const submitButton = document.querySelector('.submit-button');
+
+                if (data.is_limited) {
+                    const minutes = Math.ceil(data.reset_in_seconds / 60);
+                    rateLimitInfo.textContent = `Rate limit reached. Try again in ${minutes} minute${minutes !== 1 ? 's' : ''}.`;
+                    rateLimitInfo.className = 'rate-limit-info error';
+                    submitButton.disabled = true;
+                } else if (data.remaining === 1) {
+                    rateLimitInfo.textContent = `⚠️ ${data.remaining} submission remaining this hour`;
+                    rateLimitInfo.className = 'rate-limit-info warning';
+                    submitButton.disabled = false;
+                } else if (data.remaining === 0) {
+                    rateLimitInfo.textContent = `Rate limit reached. Please wait.`;
+                    rateLimitInfo.className = 'rate-limit-info error';
+                    submitButton.disabled = true;
+                } else {
+                    rateLimitInfo.textContent = `${data.remaining} submission${data.remaining !== 1 ? 's' : ''} remaining this hour`;
+                    rateLimitInfo.className = 'rate-limit-info';
+                    submitButton.disabled = false;
+                }
+            } catch (error) {
+                console.error('Failed to fetch rate limit status:', error);
+            }
+        }
+
+        // Update character counter
+        function updateCharCounter() {
+            const textarea = document.getElementById('userIdea');
+            const counter = document.getElementById('charCounter');
+            const length = textarea.value.length;
+
+            counter.textContent = `${length} / 500 characters`;
+
+            // Update styling based on character count
+            counter.classList.remove('warning', 'error');
+            if (length > 450) {
+                counter.classList.add('error');
+            } else if (length > 400) {
+                counter.classList.add('warning');
+            }
+        }
+
+        // Submit user idea
+        async function submitIdea() {
+            const textarea = document.getElementById('userIdea');
+            const messageDiv = document.getElementById('submissionMessage');
+            const submitButton = document.querySelector('.submit-button');
+            const idea = textarea.value.trim();
+
+            // Clear previous message
+            messageDiv.style.display = 'none';
+            messageDiv.classList.remove('success', 'error');
+
+            // Validate input
+            if (!idea) {
+                showMessage('Please enter an idea before submitting.', 'error');
+                return;
+            }
+
+            if (idea.length > 500) {
+                showMessage('Your idea is too long. Please keep it under 500 characters.', 'error');
+                return;
+            }
+
+            // Disable button during submission
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+
+            try {
+                const response = await fetch('/api/submit-idea', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ idea: idea })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage(data.message || 'Thank you for your submission!', 'success');
+                    textarea.value = '';
+                    updateCharCounter();
+                    updateRateLimitStatus();
+                } else if (response.status === 429) {
+                    // Rate limit error
+                    showMessage(data.error || 'Rate limit exceeded.', 'error');
+                    updateRateLimitStatus();
+                } else {
+                    showMessage(data.error || 'Failed to submit idea. Please try again.', 'error');
+                }
+            } catch (error) {
+                showMessage('Network error. Please check your connection and try again.', 'error');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit Idea';
+            }
+        }
+
+        // Show submission message
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('submissionMessage');
+            messageDiv.textContent = text;
+            messageDiv.className = `submission-message ${type}`;
+            messageDiv.style.display = 'block';
+
+            // Auto-hide success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Feature 1: Favorites Management
+        const FAVORITES_KEY = 'favoriteIdeas';
+        const MAX_FAVORITES = 100;
+
+        function getFavorites() {
+            const favorites = localStorage.getItem(FAVORITES_KEY);
+            return favorites ? JSON.parse(favorites) : [];
+        }
+
+        function saveFavorites(favorites) {
+            // Limit to MAX_FAVORITES to prevent localStorage bloat
+            if (favorites.length > MAX_FAVORITES) {
+                favorites = favorites.slice(-MAX_FAVORITES);
+            }
+            localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+            updateFavoritesCount();
+        }
+
+        function isFavorite(idea) {
+            const favorites = getFavorites();
+            return favorites.includes(idea);
+        }
+
+        function addFavorite(idea) {
+            let favorites = getFavorites();
+            if (!favorites.includes(idea)) {
+                favorites.push(idea);
+                saveFavorites(favorites);
+                return true;
+            }
+            return false;
+        }
+
+        function removeFavorite(idea) {
+            let favorites = getFavorites();
+            const index = favorites.indexOf(idea);
+            if (index > -1) {
+                favorites.splice(index, 1);
+                saveFavorites(favorites);
+                return true;
+            }
+            return false;
+        }
+
+        function toggleFavorite() {
+            const idea = getCurrentIdea();
+            if (!idea) {
+                alert('Generate an idea first!');
+                return;
+            }
+
+            const favoriteBtn = document.querySelector('.share-btn.favorite');
+            const favoriteIcon = document.getElementById('favoriteIcon');
+            const favoriteText = document.getElementById('favoriteText');
+
+            if (isFavorite(idea)) {
+                removeFavorite(idea);
+                favoriteBtn.classList.remove('active');
+                favoriteIcon.textContent = '⭐';
+                favoriteText.textContent = 'Favorite';
+            } else {
+                addFavorite(idea);
+                favoriteBtn.classList.add('active');
+                favoriteIcon.textContent = '★';
+                favoriteText.textContent = 'Favorited';
+            }
+        }
+
+        function updateFavoriteButtonState() {
+            const idea = getCurrentIdea();
+            const favoriteBtn = document.querySelector('.share-btn.favorite');
+            const favoriteIcon = document.getElementById('favoriteIcon');
+            const favoriteText = document.getElementById('favoriteText');
+
+            if (!idea || !favoriteBtn) return;
+
+            if (isFavorite(idea)) {
+                favoriteBtn.classList.add('active');
+                favoriteIcon.textContent = '★';
+                favoriteText.textContent = 'Favorited';
+            } else {
+                favoriteBtn.classList.remove('active');
+                favoriteIcon.textContent = '⭐';
+                favoriteText.textContent = 'Favorite';
+            }
+        }
+
+        function updateFavoritesCount() {
+            const favorites = getFavorites();
+            const countElement = document.getElementById('favoritesCount');
+            if (countElement) {
+                countElement.textContent = favorites.length;
+            }
+        }
+
+        function openFavoritesModal() {
+            const modal = document.getElementById('favoritesModal');
+            modal.classList.add('visible');
+            renderFavoritesList();
+        }
+
+        function closeFavoritesModal() {
+            const modal = document.getElementById('favoritesModal');
+            modal.classList.remove('visible');
+        }
+
+        function closeModalOnBackdrop(event) {
+            if (event.target.id === 'favoritesModal') {
+                closeFavoritesModal();
+            }
+        }
+
+        function renderFavoritesList() {
+            const favorites = getFavorites();
+            const listContainer = document.getElementById('favoritesList');
+
+            if (favorites.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="empty-favorites">
+                        <p>No favorites yet!</p>
+                        <p class="favorites-count">Click the star button to save your favorite ideas</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Show newest first
+            const reversedFavorites = [...favorites].reverse();
+
+            listContainer.innerHTML = reversedFavorites.map((idea, index) => `
+                <div class="favorite-item">
+                    <div>${idea}</div>
+                    <div class="favorite-item-actions">
+                        <button class="favorite-item-btn remove" onclick="removeFavoriteByIndex(${favorites.length - 1 - index})">
+                            Remove
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadFavoriteIdea(index) {
+            const favorites = getFavorites();
+            const idea = favorites[index];
+
+            if (idea) {
+                const ideaText = document.querySelector('.idea-text');
+                ideaText.textContent = idea;
+                ideaText.className = 'idea-text';
+                showShareButtons();
+                updateFavoriteButtonState();
+                closeFavoritesModal();
+            }
+        }
+
+        function removeFavoriteByIndex(index) {
+            let favorites = getFavorites();
+            if (confirm('Remove this idea from favorites?')) {
+                favorites.splice(index, 1);
+                saveFavorites(favorites);
+                renderFavoritesList();
+                updateFavoriteButtonState();
+            }
+        }
+
+        // Feature 2: Idea of the Day Management
+        const IDEA_OF_DAY_KEY = 'ideaOfTheDay';
+
+        function getIdeaOfDay() {
+            const stored = localStorage.getItem(IDEA_OF_DAY_KEY);
+            if (!stored) return null;
+
+            const data = JSON.parse(stored);
+            const today = new Date().toDateString();
+
+            // Check if the stored idea is from today
+            if (data.date === today) {
+                return data.idea;
+            }
+
+            // Expired, clear it
+            localStorage.removeItem(IDEA_OF_DAY_KEY);
+            return null;
+        }
+
+        function setIdeaOfDay(idea) {
+            const today = new Date().toDateString();
+            const data = {
+                idea: idea,
+                date: today
+            };
+            localStorage.setItem(IDEA_OF_DAY_KEY, JSON.stringify(data));
+        }
+
+        async function generateIdeaOfDay() {
+            // Try to get curated idea first
+            let idea;
+
+            try {
+                const response = await fetch('/api/random-idea');
+                const data = await response.json();
+                idea = data.idea;
+            } catch (error) {
+                console.error('Error fetching idea of the day:', error);
+                // Fallback to template idea
+                idea = generateTemplateIdea();
+            }
+
+            if (!idea) {
+                idea = generateTemplateIdea();
+            }
+
+            return idea;
+        }
+
+        async function displayIdeaOfDay() {
+            let idea = getIdeaOfDay();
+
+            // If no idea for today, generate one
+            if (!idea) {
+                idea = await generateIdeaOfDay();
+                if (idea) {
+                    setIdeaOfDay(idea);
+                }
+            }
+
+            // Display the idea
+            if (idea) {
+                document.getElementById('ideaOfDayText').textContent = idea;
+                document.getElementById('ideaOfDayContainer').style.display = 'block';
+            }
+        }
+
+        function loadIdeaOfDay() {
+            const idea = getIdeaOfDay();
+            if (idea) {
+                const ideaText = document.querySelector('.idea-text');
+                ideaText.textContent = idea;
+                ideaText.className = 'idea-text';
+
+                // Add to history
+                if (!hasSeenIdea(idea)) {
+                    addToHistory(idea);
+                }
+
+                showShareButtons();
+                updateFavoriteButtonState();
+
+                // Scroll to main idea
+                document.querySelector('.idea-box').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+        }
+
+    </script>
+</body>
+</html>
